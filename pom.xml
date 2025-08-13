@@ -19,6 +19,7 @@
     <module>svc-user</module>
     <module>svc-calendar</module>
     <module>svc-provider</module>
+    <module>tests</module>
   </modules>
 
   <properties>
