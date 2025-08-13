@@ -6,8 +6,10 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.qameta.allure.restassured.AllureRestAssured;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 
+@Component
 public class Config {
 
     @Value("${api.userBaseURL}")

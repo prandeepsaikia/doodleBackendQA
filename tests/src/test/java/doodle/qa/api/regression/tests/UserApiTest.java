@@ -16,10 +16,11 @@ import doodle.qa.com.svcuserqa.entity.User;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
-
+import org.springframework.test.context.ActiveProfiles;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +29,11 @@ import java.util.UUID;
 @SpringBootTest(classes = DoodleTest.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserApiTest extends Config {
+@ActiveProfiles("test")
+public class UserApiTest {
+
+    @Autowired
+    private Config config;
 
     String userId;
     String calendarId;
@@ -39,10 +44,10 @@ public class UserApiTest extends Config {
     @BeforeAll
     void setup() {
         TestData testData = new TestData();
-        calendarSetUp();
+        config.calendarSetUp();
         calendars = testData.getCalendars();
         calendarId = calendars.get(0).getId().toString();
-        userSetUp();
+        config.userSetUp();
         users = testData.getUsers();
     }
 

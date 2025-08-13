@@ -9,10 +9,11 @@ import doodle.qa.com.svcuserqa.entity.User;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
-
+import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,11 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @SpringBootTest(classes = DoodleTest.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CalendarApiTest extends Config {
+@ActiveProfiles("test")
+public class CalendarApiTest {
+
+    @Autowired
+    private Config config;
 
     String meetingId;
     String userId;
@@ -37,11 +42,11 @@ public class CalendarApiTest extends Config {
     @BeforeAll
     void setup() {
         TestData testData = new TestData();
-        userSetUp();
+        config.userSetUp();
         users = testData.getUsers();
         calendarId = users.get(0).getCalendarIds().get(0).toString();
         userId = users.get(0).getId().toString();
-        meetingsSetUp();
+        config.meetingsSetUp();
     }
 
     @Test
