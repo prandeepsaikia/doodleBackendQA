@@ -75,16 +75,12 @@ jobs:
           allure_history: allure-history
           keep_reports: 10
 
-      - name: Deploy Allure report to GitHub Pages
-        id: deploy_allure
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Allure report
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-report
-          destination_dir: allure
-
+          name: allure-report
+          path: allure-report
 
   perf-test:
     name: Performance Test
@@ -118,21 +114,39 @@ jobs:
           mvn -B gatling:test
           docker compose down -v
 
-      - name: Prepare Gatling report for GitHub Pages
+      - name: Prepare Gatling report
         run: |
           mkdir -p gatling
-          # Copy the first simulation's index.html to root
           SIMULATION_DIR=$(ls tests/target/gatling | head -n 1)
           cp -r tests/target/gatling/$SIMULATION_DIR/* gatling/
 
-      - name: Deploy Gatling report to GitHub Pages
-        id: deploy_gatling
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Gatling report
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: gatling
-          destination_dir: gatling
+          name: gatling-report
+          path: gatling
 
+  deploy:
+      name: Deploy to GitHub Pages
+      runs-on: ubuntu-latest
+      needs: [ test-regression, perf-test ]
+      steps:
+        - name: Download Allure report
+          uses: actions/download-artifact@v4
+          with:
+            name: allure-report
+            path: allure
 
+        - name: Download Gatling report
+          uses: actions/download-artifact@v4
+          with:
+            name: gatling-report
+            path: gatling
+
+        - name: Deploy to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v4
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_branch: gh-pages
+            publish_dir: .
