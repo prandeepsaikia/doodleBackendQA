@@ -85,10 +85,6 @@ jobs:
           publish_dir: allure-report
           destination_dir: allure
 
-      - name: Print Allure report URL
-        if: always()
-        run: |
-          echo "Allure Report URL: https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY##*/}/allure/"
 
   perf-test:
     name: Performance Test
@@ -138,10 +134,5 @@ jobs:
           publish_branch: gh-pages
           publish_dir: gatling
           destination_dir: gatling
-
-      - name: Print Gatling report URL
-        if: always()
-        run: |
-          echo "Gatling Report URL: https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY##*/}/gatling/"
 
 
