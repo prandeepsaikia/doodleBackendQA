@@ -1,0 +1,147 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B -U clean install -pl !tests
+
+      - name: Upload build targets
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-targets
+          path: |
+            svc-user/target
+            svc-calendar/target
+            svc-provider/target
+          retention-days: 7
+
+  test-regression:
+    name: Regression Test
+    runs-on: ubuntu-latest
+    environment:
+      name: allure-report
+      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure/
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Download build targets
+        uses: actions/download-artifact@v4
+        with:
+          name: build-targets
+          path: .
+
+      - name: Run Regression tests
+        working-directory: tests
+        run: |
+          docker compose up -d
+          sleep 20
+          mvn -B test
+          docker compose down -v
+
+      - name: Build Allure report
+        if: always()
+        uses: simple-elf/allure-report-action@v1.12
+        with:
+          allure_results: tests/target/allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 10
+
+      - name: Deploy Allure report to GitHub Pages
+        id: deploy_allure
+        uses: peaceiris/actions-gh-pages@v4
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-report
+          destination_dir: allure
+
+      - name: Print Allure report URL
+        if: always()
+        run: |
+          echo "Allure Report URL: https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY##*/}/allure/"
+
+  perf-test:
+    name: Performance Test
+    runs-on: ubuntu-latest
+    environment:
+      name: gatling-report
+      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/gatling/
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Download build targets
+        uses: actions/download-artifact@v4
+        with:
+          name: build-targets
+          path: .
+
+      - name: Run Gatling performance tests
+        working-directory: tests
+        run: |
+          docker compose up -d
+          sleep 20
+          mvn -B gatling:test
+          docker compose down -v
+
+      - name: Prepare Gatling report for GitHub Pages
+        run: |
+          mkdir -p gatling
+          # Copy the first simulation's index.html to root
+          SIMULATION_DIR=$(ls tests/target/gatling | head -n 1)
+          cp -r tests/target/gatling/$SIMULATION_DIR/* gatling/
+
+      - name: Deploy Gatling report to GitHub Pages
+        id: deploy_gatling
+        uses: peaceiris/actions-gh-pages@v4
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: gatling
+          destination_dir: gatling
+
+      - name: Print Gatling report URL
+        if: always()
+        run: |
+          echo "Gatling Report URL: https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY##*/}/gatling/"
+
+

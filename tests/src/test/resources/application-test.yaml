@@ -1,0 +1,12 @@
+api:
+  userBaseURL: http://localhost:8080
+  userBasePath: api/users
+  calendarBaseURL: http://localhost:8082
+  calendarMeetingBasePath: meeting
+  providerBaseURL: http://localhost:8083
+  providerCalendarBasePath: api/calendars
+  providerEventBasePath: api/events
+
+
+
+
