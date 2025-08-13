@@ -100,7 +100,7 @@ public class UserApiPerfTest extends Simulation {
             );
 
     // =============================
-    // 5. Soak Test (1 minute constant load)
+    // 5. Soak Test
     // =============================
     ScenarioBuilder soakTest = scenario("Soak Test - under Constant Load")
             .exec(

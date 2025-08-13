@@ -10,30 +10,29 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class Config {
 
-    @Value("${api.userBaseURL:http://localhost:8080}")
+    @Value("${api.userBaseURL}")
     private String userBaseURL;
 
-    @Value("${api.userBasePath:api/users}")
+    @Value("${api.userBasePath}")
     private String userBasePath;
 
-    @Value("${api.calendarBaseURL:http://localhost:8082}")
+    @Value("${api.calendarBaseURL}")
     private String calendarBaseURL;
 
-    @Value("${api.calendarMeetingBasePath:meeting}")
+    @Value("${api.calendarMeetingBasePath}")
     private String calendarMeetingBasePath;
 
-    @Value("${api.providerBaseURL:http://localhost:8083}")
+    @Value("${api.providerBaseURL}")
     private String providerBaseURL;
 
-    @Value("${api.providerEventBasePath:api/events}")
+    @Value("${api.providerEventBasePath}")
     private String providerEventsBasePath;
 
-    @Value("${api.providerCalendarBasePath:api/calendars}")
+    @Value("${api.providerCalendarBasePath}")
     private String providerCalendarBasePath;
 
 
     public void userSetUp() {
-
 
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .setBaseUri(userBaseURL)
@@ -56,10 +55,6 @@ public class Config {
     }
 
     public void calendarSetUp() {
-
-        if (providerBaseURL == null) {
-            System.out.println("Provider Base URL is null");
-        }
 
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .setBaseUri(providerBaseURL)
