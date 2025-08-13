@@ -22,7 +22,7 @@ Prerequisite: Build service images and artifacts from the repository root so tes
 ```bash
 mvn clean install -pl !tests
 ```
-
+In mac OS, `mvn clean install -pl \!tests` \
 Then run tests from the tests directory.
 
 ### Regression tests
@@ -42,8 +42,8 @@ docker compose down -v
 ```
 
 Notes:
-- After running docker compose up -d, wait a few seconds for services to start.
-- The initial mvn clean install -pl !tests at the repo root builds svc-user and svc-calendar, producing images/jars needed by the tests.
+- After running `docker compose up -d`, wait a few seconds for services to start completely.
+- The initial `mvn clean install -pl !tests` at the repo root builds svc-user and svc-calendar, producing images/jars needed by the tests.
 
 ## CI/CD
 - Any push to the remote repository triggers the GitHub Actions pipeline.
@@ -60,13 +60,14 @@ mvn allure:serve
 ## Notes
 - Regression tests are basic (mostly positive, with a few negative cases).
 - Additional test cases: `tests/docs/TestCases.pdf`
-- A few known issues may be present in the code.
+- I found one or two bugs during limited testing.
 
 ## Possible improvements
 - Add automated security testing (OWASP ZAP).
 - Add static code analysis.
 - Expand CI/CD pipeline.
-- Add Java profiling to identify performance bottlenecks.
-- Run more exhaustive performance testing.
-- Provide Helm charts and Kubernetes manifests for deployment.
+- If deployed with docker then check image vulnerability.
+- Manually identify code performance with Java profiling tools.
+- Run more exhaustive performance testing with various workloads.
+- Adding Helm charts and Kubernetes manifests for deployment.
 - Use Terraform to provision isolated environments for testing/performance in the cloud.
