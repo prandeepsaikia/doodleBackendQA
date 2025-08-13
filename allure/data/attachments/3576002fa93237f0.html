@@ -1,0 +1,37 @@
+<div>PUT to http://localhost:8082/meeting/3e34a461-f796-40ce-81aa-fba36ba80c55?userId=e9c3b723-94a1-4a51-8f01-f8a7b2bef082</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;id&quot;: &quot;cd8d6983-ada3-4eb4-9d03-7bf8be44f084&quot;,
+    &quot;title&quot;: &quot;Quigley Group Meeting&quot;,
+    &quot;description&quot;: &quot;Description of Meeting&quot;,
+    &quot;startTime&quot;: &quot;2025-08-13T20:21:00&quot;,
+    &quot;endTime&quot;: &quot;2025-08-13T20:51:00&quot;,
+    &quot;location&quot;: &quot;Baghdad&quot;,
+    &quot;calendarId&quot;: &quot;2d4e343a-b15c-4972-b0e4-863131699ed3&quot;
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: application/json, application/javascript, text/javascript, text/json</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X PUT &#39;http://localhost:8082/meeting/3e34a461-f796-40ce-81aa-fba36ba80c55?userId=e9c3b723-94a1-4a51-8f01-f8a7b2bef082&#39; -H &#39;Accept: application/json, application/javascript, text/javascript, text/json&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;id&quot;: &quot;cd8d6983-ada3-4eb4-9d03-7bf8be44f084&quot;,
+    &quot;title&quot;: &quot;Quigley Group Meeting&quot;,
+    &quot;description&quot;: &quot;Description of Meeting&quot;,
+    &quot;startTime&quot;: &quot;2025-08-13T20:21:00&quot;,
+    &quot;endTime&quot;: &quot;2025-08-13T20:51:00&quot;,
+    &quot;location&quot;: &quot;Baghdad&quot;,
+    &quot;calendarId&quot;: &quot;2d4e343a-b15c-4972-b0e4-863131699ed3&quot;
+}&#39;
+    </div>
+

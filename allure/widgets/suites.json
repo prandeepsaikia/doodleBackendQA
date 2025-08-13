@@ -1,0 +1,1 @@
+{"total":2,"items":[{"uid":"75554eab16817cd331599c5a4a97aedf","name":"doodle.qa.api.regression.tests.UserApiTest","statistic":{"failed":0,"broken":0,"skipped":0,"passed":12,"unknown":0,"total":12}},{"uid":"2ed239588d1cd5eeda9c2d9803a691a1","name":"doodle.qa.api.regression.tests.CalendarApiTest","statistic":{"failed":0,"broken":0,"skipped":0,"passed":8,"unknown":0,"total":8}}]}
