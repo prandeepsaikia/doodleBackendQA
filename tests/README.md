@@ -4,6 +4,9 @@ This module contains basic regression and performance tests for the services:
 - **svc-user**
 - **svc-calendar**
 
+Added **GitHub Actions workflow** for running tests. Results are published to the GitHub Pages site.
+Reports can be viewed under workflow run summary.
+
 Additional manual/outlined tests are documented in `tests/docs/TestCases.pdf`
 
 **Technologies used:**
@@ -65,7 +68,7 @@ mvn allure:serve
 ## Possible improvements
 - Add automated security testing (OWASP ZAP).
 - Add static code analysis.
-- Expand CI/CD pipeline.
+- Expand CI/CD pipeline with various stages.
 - If deployed with docker then check image vulnerability.
 - Manually identify code performance with Java profiling tools.
 - Run more exhaustive performance testing with various workloads.
