@@ -1,0 +1,37 @@
+<div>POST to http://localhost:8082/meeting?userId=3dfa51c3-e76b-4d7c-9678-2843cd250b99</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;id&quot;: &quot;e55a92ed-0d99-4dab-b70c-70e9b396678c&quot;,
+    &quot;title&quot;: &quot;Rempel Inc Meeting&quot;,
+    &quot;description&quot;: &quot;Description of Meeting&quot;,
+    &quot;startTime&quot;: &quot;2025-08-14T14:35:00&quot;,
+    &quot;endTime&quot;: &quot;2025-08-14T15:05:00&quot;,
+    &quot;location&quot;: &quot;New Delhi&quot;,
+    &quot;calendarId&quot;: &quot;30485835-fd5e-40c2-9d65-aaec49bfced0&quot;
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: application/json, application/javascript, text/javascript, text/json</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;http://localhost:8082/meeting?userId=3dfa51c3-e76b-4d7c-9678-2843cd250b99&#39; -H &#39;Accept: application/json, application/javascript, text/javascript, text/json&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;id&quot;: &quot;e55a92ed-0d99-4dab-b70c-70e9b396678c&quot;,
+    &quot;title&quot;: &quot;Rempel Inc Meeting&quot;,
+    &quot;description&quot;: &quot;Description of Meeting&quot;,
+    &quot;startTime&quot;: &quot;2025-08-14T14:35:00&quot;,
+    &quot;endTime&quot;: &quot;2025-08-14T15:05:00&quot;,
+    &quot;location&quot;: &quot;New Delhi&quot;,
+    &quot;calendarId&quot;: &quot;30485835-fd5e-40c2-9d65-aaec49bfced0&quot;
+}&#39;
+    </div>
+
