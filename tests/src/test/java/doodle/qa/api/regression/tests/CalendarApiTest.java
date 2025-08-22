@@ -11,7 +11,6 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDateTime;
@@ -31,6 +30,7 @@ public class CalendarApiTest {
 
     @Autowired
     private Config config;
+    private TestData testData;
 
     String meetingId;
     String userId;
@@ -41,7 +41,6 @@ public class CalendarApiTest {
 
     @BeforeAll
     void setup() {
-        TestData testData = new TestData();
         config.userSetUp();
         users = testData.getUsers();
         calendarId = users.get(0).getCalendarIds().get(0).toString();
@@ -54,7 +53,7 @@ public class CalendarApiTest {
     @Tag("Positive")
     @Tag("Regression")
     @DisplayName("Create a New Meeting")
-    void createNewMeeting() throws Exception {
+    void createNewMeeting() {
 
         requestBody = MeetingRequestBody.builder().calendarId(calendarId).build();
 
@@ -66,7 +65,7 @@ public class CalendarApiTest {
                         .post(Endpoints.CREATE_MEETING)
                         .then()
                         .statusCode(HttpStatus.CREATED.value())
-                        .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("MeetingResponseBodySchema_Create_Update.json").getFile()))
+                        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("MeetingResponseBodySchema_Create_Update.json"))
                         .body("title", equalTo(requestBody.getTitle()),
                                 "description", equalTo(requestBody.getDescription()))
                         .extract().response();
@@ -79,7 +78,7 @@ public class CalendarApiTest {
     @Tag("Negative")
     @Tag("Regression")
     @DisplayName("Create a New Meeting with Invalid User Id")
-    void createNewMeetingWithInvalidUser() throws Exception {
+    void createNewMeetingWithInvalidUser() {
 
         requestBody = MeetingRequestBody.builder().calendarId(calendarId).build();
 
@@ -97,7 +96,7 @@ public class CalendarApiTest {
     @Tag("Positive")
     @Tag("Regression")
     @DisplayName("Get a New Meeting By Id")
-    void getMeetingById() throws Exception {
+    void getMeetingById() {
 
         given()
                 .pathParam("id", meetingId)
@@ -107,7 +106,7 @@ public class CalendarApiTest {
                 .get(Endpoints.GET_MEETING_BY_ID)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("MeetingResponseBodySchema_Create_Update.json").getFile()));
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("MeetingResponseBodySchema_Create_Update.json"));
     }
 
     @Test
@@ -115,7 +114,7 @@ public class CalendarApiTest {
     @Tag("Negative")
     @Tag("Regression")
     @DisplayName("Get a Meeting By Invalid MeetingId")
-    void getMeetingByInvalidId() throws Exception {
+    void getMeetingByInvalidId() {
 
         given()
                 .pathParam("id", UUID.randomUUID().toString())
@@ -132,7 +131,7 @@ public class CalendarApiTest {
     @Tag("Regression")
     @DisplayName("Update an existing Meeting")
     @Order(5)
-    void updateMeeting() throws Exception {
+    void updateMeeting() {
 
         requestBody = MeetingRequestBody.builder().calendarId(calendarId).build();
 
@@ -144,7 +143,7 @@ public class CalendarApiTest {
                 .put(Endpoints.UPDATE_MEETING)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("MeetingResponseBodySchema_Create_Update.json").getFile()))
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("MeetingResponseBodySchema_Create_Update.json"))
                 .body("title", equalTo(requestBody.getTitle()),
                         "description", equalTo(requestBody.getDescription()));
     }
@@ -154,7 +153,7 @@ public class CalendarApiTest {
     @Tag("Positive")
     @Tag("Regression")
     @DisplayName("Get All Meetings")
-    void getAllMeetings() throws Exception {
+    void getAllMeetings() {
 
         given()
                 .queryParam("userId", userId)
@@ -192,7 +191,6 @@ public class CalendarApiTest {
     @DisplayName("Get Available Meeting Time slots")
     void getMeetingSlots() {
 
-        Response response =
                 given()
                         .queryParam("userId", userId)
                         .queryParam("calendarId", calendarId)
@@ -204,7 +202,6 @@ public class CalendarApiTest {
                         .when()
                         .get(Endpoints.GET_MEETING_TIME_SLOTS)
                         .then()
-                        .statusCode(HttpStatus.OK.value())
-                        .extract().response();
+                        .statusCode(HttpStatus.OK.value());
     }
 }

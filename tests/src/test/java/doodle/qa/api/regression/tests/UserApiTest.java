@@ -18,10 +18,8 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +32,7 @@ public class UserApiTest {
 
     @Autowired
     private Config config;
+    private TestData testData;
 
     String userId;
     String calendarId;
@@ -43,7 +42,6 @@ public class UserApiTest {
 
     @BeforeAll
     void setup() {
-        TestData testData = new TestData();
         config.calendarSetUp();
         calendars = testData.getCalendars();
         calendarId = calendars.get(0).getId().toString();
@@ -66,7 +64,7 @@ public class UserApiTest {
                         .post(Endpoints.CREATE_USER)
                         .then()
                         .statusCode(HttpStatus.CREATED.value())
-                        .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("UserResponseBodySchema_Create_Update.json").getFile()))
+                        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserResponseBodySchema_Create_Update.json"))
                         .body("name", equalTo(requestBody.getName()),
                                 "email", equalTo(requestBody.getEmail()))
                         .extract().response();
@@ -79,7 +77,7 @@ public class UserApiTest {
     @Tag("Regression")
     @DisplayName("Get User By User Id")
     @Order(2)
-    void getUserById() throws Exception {
+    void getUserById() {
 
         given()
                 .pathParam("userId", userId)
@@ -87,7 +85,7 @@ public class UserApiTest {
                 .get(Endpoints.GET_USER_BY_ID)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("UserResponseBodySchema_Create_Update.json").getFile()))
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserResponseBodySchema_Create_Update.json"))
                 .body("id", equalTo(userId));
     }
 
@@ -96,7 +94,7 @@ public class UserApiTest {
     @Tag("Regression")
     @DisplayName("Get User By Invalid UserId")
     @Order(3)
-    void getUserByInvalidId() throws Exception {
+    void getUserByInvalidId() {
 
         given()
                 .pathParam("userId", UUID.randomUUID().toString())
@@ -111,7 +109,7 @@ public class UserApiTest {
     @Tag("Regression")
     @DisplayName("Update User")
     @Order(4)
-    void updateUser() throws Exception {
+    void updateUser() {
 
         requestBody = UserRequestBody.withDefaults().build();
 
@@ -122,7 +120,7 @@ public class UserApiTest {
                 .put(Endpoints.UPDATE_USER)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("UserResponseBodySchema_Create_Update.json").getFile()))
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserResponseBodySchema_Create_Update.json"))
                 .body("name", equalTo(requestBody.getName()),
                         "email", equalTo(requestBody.getEmail()));
     }
@@ -141,7 +139,7 @@ public class UserApiTest {
                 .post(Endpoints.ADD_CALENDAR_TO_USER)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("UserResponseBodySchema_Create_Update.json").getFile()))
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserResponseBodySchema_Create_Update.json"))
                 .body("id", equalTo(userId), "calendarIds", hasItems(calendarId));
     }
 
@@ -150,7 +148,7 @@ public class UserApiTest {
     @Tag("Regression")
     @DisplayName("Remove Calendar From a User")
     @Order(6)
-    void deleteCalendarFromUser() throws IOException {
+    void deleteCalendarFromUser() {
 
         given()
                 .pathParam("userId", userId)
@@ -159,7 +157,7 @@ public class UserApiTest {
                 .delete(Endpoints.DELETE_CALENDAR_FROM_USER)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("UserResponseBodySchema_Create_Update.json").getFile()))
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserResponseBodySchema_Create_Update.json"))
                 .body("id", equalTo(userId), "calendarIds", not(hasItems(calendarId)));
     }
 
@@ -183,17 +181,16 @@ public class UserApiTest {
     @Tag("Regression")
     @DisplayName("Get All Users")
     @Order(8)
-    void getAllUsers() throws Exception {
+    void getAllUsers() {
 
-        Response response =
+        List<User> actualUsers =
                 given()
                         .when()
                         .get(Endpoints.GET_ALL_USERS)
                         .then()
                         .statusCode(HttpStatus.OK.value())
-                        .extract().response();
+                        .extract().jsonPath().getList("users", User.class);
 
-        List<User> actualUsers = response.jsonPath().getList("users", User.class);
         assertEquals(users, actualUsers);
     }
 
@@ -202,7 +199,7 @@ public class UserApiTest {
     @Tag("Regression")
     @DisplayName("Create User with Chinese characters ")
     @Order(9)
-    void createNewUserWithChineseCharacters() throws Exception {
+    void createNewUserWithChineseCharacters() {
 
         requestBody = UserRequestBody.withDefaults("zh-CN").build();
 
@@ -212,7 +209,7 @@ public class UserApiTest {
                 .post(Endpoints.CREATE_USER)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("UserResponseBodySchema_Create_Update.json").getFile()))
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserResponseBodySchema_Create_Update.json"))
                 .body("name", equalTo(requestBody.getName()),
                         "email", equalTo(requestBody.getEmail()));
     }
@@ -222,7 +219,7 @@ public class UserApiTest {
     @Tag("Regression")
     @DisplayName("Create User with Russian characters ")
     @Order(10)
-    void createNewUserWithRussianCharacters() throws Exception {
+    void createNewUserWithRussianCharacters() {
 
         requestBody = UserRequestBody.withDefaults("ru").build();
 
@@ -232,7 +229,7 @@ public class UserApiTest {
                 .post(Endpoints.CREATE_USER)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body(JsonSchemaValidator.matchesJsonSchema(new ClassPathResource("UserResponseBodySchema_Create_Update.json").getFile()))
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserResponseBodySchema_Create_Update.json"))
                 .body("name", equalTo(requestBody.getName()),
                         "email", equalTo(requestBody.getEmail()));
     }
