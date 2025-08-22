@@ -6,12 +6,14 @@ import doodle.qa.com.svcproviderqa.entity.Calendar;
 import doodle.qa.com.svcuserqa.entity.User;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static io.restassured.RestAssured.given;
 
-
+@Component
 public class TestData extends Config{
 
     public List<Calendar>  getCalendars() {
