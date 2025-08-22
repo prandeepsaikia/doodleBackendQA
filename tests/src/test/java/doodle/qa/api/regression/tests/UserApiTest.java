@@ -32,7 +32,6 @@ public class UserApiTest {
 
     @Autowired
     private Config config;
-    @Autowired
     private TestData testData;
 
     String userId;

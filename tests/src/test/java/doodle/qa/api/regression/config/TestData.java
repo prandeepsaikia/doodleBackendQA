@@ -16,9 +16,11 @@ import static io.restassured.RestAssured.given;
 @Component
 public class TestData extends Config{
 
+    Response response;
+
     public List<Calendar>  getCalendars() {
 
-        Response response = given().get(Endpoints.GET_ALL_CALENDARS).then().statusCode(HttpStatus.OK.value()).extract().response();
+        response = given().get(Endpoints.GET_ALL_CALENDARS).then().statusCode(HttpStatus.OK.value()).extract().response();
         List<Calendar> calendars = response.jsonPath().getList("calendars", Calendar.class);
 
         if (calendars.isEmpty()) {
@@ -37,7 +39,7 @@ public class TestData extends Config{
 
     public List<User> getUsers()  {
 
-        Response response = given().get(Endpoints.GET_ALL_USERS).then().statusCode(HttpStatus.OK.value()).extract().response();
+        response = given().get(Endpoints.GET_ALL_USERS).then().statusCode(HttpStatus.OK.value()).extract().response();
         List<User> users = response.jsonPath().getList("users", User.class);
 
         if (users.isEmpty()) {

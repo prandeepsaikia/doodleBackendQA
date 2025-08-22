@@ -30,7 +30,6 @@ public class CalendarApiTest {
 
     @Autowired
     private Config config;
-    @Autowired
     private TestData testData;
 
     String meetingId;
