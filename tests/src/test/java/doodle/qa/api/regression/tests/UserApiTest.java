@@ -55,7 +55,7 @@ public class UserApiTest {
     @Tag("Regression")
     @DisplayName("Create User")
     @Order(1)
-    void createNewUser() throws Exception {
+    void createNewUser() {
 
         requestBody = UserRequestBody.withDefaults().build();
         Response response =
@@ -131,7 +131,7 @@ public class UserApiTest {
     @Tag("Regression")
     @DisplayName("Add Calendar to a User")
     @Order(5)
-    void addCalendarToUser() throws Exception {
+    void addCalendarToUser() {
 
         given()
                 .pathParam("userId", userId)
